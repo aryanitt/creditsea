@@ -1,0 +1,36 @@
+services:
+  # ─── BACKEND EXPRESS WEB SERVICE ───
+  - type: web
+    name: creditsea-backend
+    env: node
+    rootDir: backend
+    plan: free # Free tier eligible
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false # User will paste their MongoDB Atlas URI in the Render dashboard
+      - key: JWT_SECRET
+        generateValue: true # Generates a random secure JWT secret key automatically!
+      - key: NODE_ENV
+        value: production
+
+  # ─── FRONTEND NEXT.JS WEB SERVICE ───
+  - type: web
+    name: creditsea-frontend
+    env: node
+    rootDir: frontend
+    plan: free # Free tier eligible
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://creditsea-backend.onrender.com/api # Replace with your backend Render URL once provisioned
+      - key: GOOGLE_GENERATIVE_AI_API_KEY
+        sync: false # User will paste their Google Gemini API Key in the Render dashboard
+      - key: GROQ_API_KEY
+        sync: false # User will paste their Groq API Key in the Render dashboard
+      - key: NODE_ENV
+        value: production
