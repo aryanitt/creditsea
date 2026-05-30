@@ -27,7 +27,16 @@ export default function ChatWidget() {
         body: JSON.stringify({ messages: [...messages, userMsg] }),
       });
 
-      if (!res.ok) throw new Error('Failed to fetch response');
+      if (!res.ok) {
+        let errorDetails = 'Failed to fetch response';
+        try {
+          const errJson = await res.json();
+          if (errJson.error) {
+            errorDetails = `${errJson.error}${errJson.details ? ` (${errJson.details})` : ''}`;
+          }
+        } catch (_) {}
+        throw new Error(errorDetails);
+      }
 
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
@@ -46,8 +55,17 @@ export default function ChatWidget() {
           );
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      const errorMsgId = (Date.now() + 2).toString();
+      setMessages((prev) => [
+        ...prev,
+        { 
+          id: errorMsgId, 
+          role: 'assistant', 
+          content: `⚠️ Error: ${error.message || 'Unable to connect to the assistant.'} Please check the server configuration and make sure GOOGLE_GENERATIVE_AI_API_KEY is correctly set on Render.` 
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }

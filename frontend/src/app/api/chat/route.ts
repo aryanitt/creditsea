@@ -5,9 +5,23 @@ import { streamText } from 'ai';
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  try {
+    const { messages } = await req.json();
 
-  const systemPrompt = `You are the official CreditSea AI Assistant, a helpful and professional customer support agent for CreditSea.
+    if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+      console.error("CRITICAL ERROR: GOOGLE_GENERATIVE_AI_API_KEY is not set in the environment variables!");
+      return new Response(
+        JSON.stringify({ 
+          error: "API key configuration missing. Please set GOOGLE_GENERATIVE_AI_API_KEY in Render environment variables." 
+        }), 
+        { 
+          status: 500, 
+          headers: { 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    const systemPrompt = `You are the official CreditSea AI Assistant, a helpful and professional customer support agent for CreditSea.
 CreditSea is a premium digital lending platform.
 
 Here is important information about CreditSea you should use to answer user queries:
@@ -26,16 +40,29 @@ Here is important information about CreditSea you should use to answer user quer
 2. If asked something unrelated to finance, loans, or CreditSea, politely steer the conversation back to CreditSea services.
 3. Confirm proudly that all loans have a **fixed interest rate of 12% p.a.**, and that customers can request any amount from ₹50K to ₹5L for 30 to 365 days.`;
 
-  const result = streamText({
-    model: google('gemini-2.5-flash'),
-    system: systemPrompt,
-    messages,
-  });
+    const result = streamText({
+      model: google('gemini-2.5-flash'),
+      system: systemPrompt,
+      messages,
+    });
 
-  return result.toTextStreamResponse({
-    headers: {
-      'X-Accel-Buffering': 'no',
-      'Cache-Control': 'no-cache',
-    }
-  });
+    return result.toTextStreamResponse({
+      headers: {
+        'X-Accel-Buffering': 'no',
+        'Cache-Control': 'no-cache',
+      }
+    });
+  } catch (error: any) {
+    console.error("CRITICAL ERROR in /api/chat execution:", error);
+    return new Response(
+      JSON.stringify({ 
+        error: "Internal server error in processing chat request.",
+        details: error.message 
+      }), 
+      { 
+        status: 500, 
+        headers: { 'Content-Type': 'application/json' } 
+      }
+    );
+  }
 }
