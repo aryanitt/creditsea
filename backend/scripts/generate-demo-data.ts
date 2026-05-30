@@ -21,6 +21,13 @@ async function generateDemoData() {
     await mongoose.connect(process.env.MONGO_URI as string);
     console.log('Connected to MongoDB');
 
+    // Clean up old orphaned records to restore names and data integrity
+    await User.deleteMany({ role: Role.BORROWER });
+    await Application.deleteMany();
+    await Loan.deleteMany();
+    await Payment.deleteMany();
+    console.log('Cleared old borrower and transaction records for data restoration.');
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash('Password@123', salt);
 
