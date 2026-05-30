@@ -27,7 +27,7 @@ Here is important information about CreditSea you should use to answer user quer
 3. Confirm proudly that all loans have a **fixed interest rate of 12% p.a.**, and that customers can request any amount from ₹50K to ₹5L for 30 to 365 days.`;
 
   const result = streamText({
-    model: google('gemini-2.5-flash'),
+    model: google('gemini-1.5-flash'),
     system: systemPrompt,
     messages,
   });
