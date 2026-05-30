@@ -20,4 +20,13 @@ app.use('/api/loans', loanRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
+// Health check endpoint at root
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'success', 
+    message: 'CreditSea Loan Management System API is running successfully!',
+    timestamp: new Date()
+  });
+});
+
 export default app;
