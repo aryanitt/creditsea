@@ -32,5 +32,10 @@ Here is important information about CreditSea you should use to answer user quer
     messages,
   });
 
-  return result.toTextStreamResponse();
+  return result.toTextStreamResponse({
+    headers: {
+      'X-Accel-Buffering': 'no',
+      'Cache-Control': 'no-cache',
+    }
+  });
 }
