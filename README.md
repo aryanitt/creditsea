@@ -2,6 +2,12 @@
 
 A state-of-the-art, secure, and fully automated role-based Loan Management System (LMS) designed for modern financial institutions. Engineered with **Next.js (App Router)**, **TypeScript**, **Node.js/Express**, and **MongoDB**, this platform features a robust Business Rule Engine (BRE), accurate daily-accrued interest ledger tracking, integrated RBAC controls, and a context-aware AI Assistant.
 
+## 🌐 Deployed Live Link
+Experience the live operational portal: **[CreditSea Production Portal](https://creditsea-frontend-4jlb.onrender.com)**
+
+## 🎬 Project Walkthrough Video
+Watch the high-fidelity end-to-end walkthrough of the Loan Management System on YouTube: **[CreditSea Loan Management System Demonstration](https://youtu.be/_0Asjnh1oSY)**
+
 ---
 
 ## 💎 Core Enterprise Capabilities
